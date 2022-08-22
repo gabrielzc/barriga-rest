@@ -1,0 +1,32 @@
+package br.ce.gzc.rest.core;
+
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import org.hamcrest.Matchers;
+import org.junit.BeforeClass;
+
+public class BaseTest implements Constantes{
+
+    @BeforeClass
+    public static void setup() {
+        RestAssured.baseURI = APP_BASE_URL;
+        RestAssured.port = APP_PORT;
+        RestAssured.basePath = APP_BASE_PATH;
+
+        // Content type
+        // Criação do builder
+        RequestSpecBuilder reqBuilder = new RequestSpecBuilder();
+        // Requisições serão do tipo JSON
+        reqBuilder.setContentType(APP_CONTENT_TYPE);
+        RestAssured.requestSpecification = reqBuilder.build();
+
+        // Expectativa do tempo de resposta
+        ResponseSpecBuilder resBuilder = new ResponseSpecBuilder();
+        resBuilder.expectResponseTime((Matchers.lessThan(MAX_TIMEOUT)));
+        RestAssured.responseSpecification = resBuilder.build();
+
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
+
+}
